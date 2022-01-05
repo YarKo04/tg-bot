@@ -7,6 +7,9 @@ const weather_token = config.get('w_token');
 const weatherEndpoint = (city) => (
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${weather_token}`
 );
+const worldClock = (city) => (
+    `http://worldtimeapi.org/api/timezone/Europe/${city}`
+)
 
 const bot = new telegramApi(token, {
     polling: true,
@@ -65,6 +68,47 @@ Wind: <b>${wind.speed} meter/sec</b>
 Clouds: <b>${clouds.all} %</b>
 `
 );
+
+const clockHTMLTemplate = (timezone, datetime) => (
+    `The actual time in ${timezone} is ${datetime}`
+);
+
+const getTime = (chatId, city) => {
+    const endpoint = worldClock(city);
+
+    axios.get(endpoint).then((resp) => {
+        const {
+            timezone,
+            datetime
+        } = resp.data;
+
+        bot.sendMessage(chatId, clockHTMLTemplate(timezone, datetime), {
+            parse_mode: "HTML"
+        });
+    }, error => {
+        console.log("error", error);
+        bot.sendMessage(
+            chatId,
+            `Ooops...I couldn't be able to get time for <b>${city}</b>`, {
+                parse_mode: "HTML"
+            }
+        );
+    })
+}
+
+bot.onText(/\/time/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(' ')[1];
+
+    if (city === undefined) {
+        bot.sendMessage(
+            chatId,
+            `Please provide city name. For example (/time Kyiv)`
+        );
+        return;
+    }
+    getTime(chatId, city);
+});
 
 const getWeather = (chatId, city) => {
     const endpoint = weatherEndpoint(city);
