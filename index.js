@@ -10,7 +10,6 @@ const weatherEndpoint = (city) =>
   `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${weather_token}`;
 const worldClock = (city) =>
   `http://worldtimeapi.org/api/timezone/Europe/${city}`;
-const population = (name) => `https://api.api-ninjas.com/v1/city?name=${name}`;
 
 const bot = new telegramApi(token, {
   polling: true,
@@ -35,6 +34,10 @@ const basic = () => {
     {
       command: '/time',
       description: 'Actual time in city',
+    },
+    {
+      command: '/population',
+      description: 'Population in city',
     },
   ]);
 
