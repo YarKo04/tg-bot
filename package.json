@@ -19,7 +19,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "node-telegram-bot-api": "^0.56.0",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.7",
