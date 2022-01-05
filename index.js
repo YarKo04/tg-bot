@@ -8,26 +8,11 @@ const weatherEndpoint = (city) => (
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${weather_token}`
 );
 
-// URL that provides icon according to the weather
-const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
-
-// Template for weather response
-const weatherHtmlTemplate = (name, main, weather, wind, clouds) => (
-    `The weather in <b>${name}</b>:
-<b>${weather.main}</b> - ${weather.description}
-Temperature: <b>${main.temp} °C</b>
-Pressure: <b>${main.pressure} hPa</b>
-Humidity: <b>${main.humidity} %</b>
-Wind: <b>${wind.speed} meter/sec</b>
-Clouds: <b>${clouds.all} %</b>
-`
-);
-
 const bot = new telegramApi(token, {
     polling: true,
 });
 
-const begin = () => {
+const basic = () => {
     bot.on('polling_error', console.log);
 
     bot.setMyCommands([{
@@ -66,8 +51,21 @@ const begin = () => {
         }
     });
 };
+basic();
 
-// Function that gets the weather by the city name
+const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
+
+const weatherHtmlTemplate = (name, main, weather, wind, clouds) => (
+    `The weather in <b>${name}</b>:
+<b>${weather.main}</b> - ${weather.description}
+Temperature: <b>${main.temp} °C</b>
+Pressure: <b>${main.pressure} hPa</b>
+Humidity: <b>${main.humidity} %</b>
+Wind: <b>${wind.speed} meter/sec</b>
+Clouds: <b>${clouds.all} %</b>
+`
+);
+
 const getWeather = (chatId, city) => {
     const endpoint = weatherEndpoint(city);
 
@@ -81,6 +79,7 @@ const getWeather = (chatId, city) => {
         } = resp.data;
 
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon))
+
         bot.sendMessage(
             chatId,
             weatherHtmlTemplate(name, main, weather[0], wind, clouds), {
@@ -98,7 +97,6 @@ const getWeather = (chatId, city) => {
     });
 }
 
-// Listener (handler) for telegram's /weather event
 bot.onText(/\/weather/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match.input.split(' ')[1];
@@ -106,13 +104,9 @@ bot.onText(/\/weather/, (msg, match) => {
     if (city === undefined) {
         bot.sendMessage(
             chatId,
-            `Please provide city name`
+            `Please provide city name. For example (/weather Kyiv)`
         );
         return;
     }
     getWeather(chatId, city);
 });
-
-
-
-begin();
