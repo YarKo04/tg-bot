@@ -30,6 +30,10 @@ const basic = () => {
             command: '/weather',
             description: 'Weather in your city'
         },
+        {
+            command: '/time',
+            description: 'Actual time in city'
+        },
     ]);
 
     bot.on('message', async (msg, match) => {
