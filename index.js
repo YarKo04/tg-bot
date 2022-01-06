@@ -56,10 +56,6 @@ const basic = () => {
                 'https://tlgrm.ru/_/stickers/88e/586/88e586f0-4299-313f-bedb-ef45c7710422/1.webp'
             );
         }
-
-        if (text === '/info') {
-            return bot.sendMessage(chatId, `Your name is:  ${user}`);
-        }
     });
 };
 basic();
