@@ -23,10 +23,6 @@ const basic = () => {
             description: 'Greeting',
         },
         {
-            command: '/info',
-            description: 'Information',
-        },
-        {
             command: '/weather',
             description: 'Weather in your city',
         },
