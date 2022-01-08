@@ -42,14 +42,22 @@ const basic = () => {
     const chatId = msg.chat.id;
     const text = msg.text;
 
-    if (text === '/start') {
-      await bot.sendMessage(
+    try {
+      if (text === '/start') {
+        await bot.sendMessage(
+          chatId,
+          'Welcome to Smart-Bot! Hope that we can make your life easier!'
+        );
+        return bot.sendSticker(
+          chatId,
+          'https://tlgrm.ru/_/stickers/88e/586/88e586f0-4299-313f-bedb-ef45c7710422/1.webp'
+        );
+      }
+    } catch (e) {
+      console.log('error');
+      bot.sendMessage(
         chatId,
-        'Welcome to Smart-Bot! Hope that we can make your life easier!'
-      );
-      return bot.sendSticker(
-        chatId,
-        'https://tlgrm.ru/_/stickers/88e/586/88e586f0-4299-313f-bedb-ef45c7710422/1.webp'
+        'Something went wrong :('
       );
     }
   });
@@ -71,31 +79,18 @@ Clouds: <b>${clouds.all} %</b>
 const clockHTMLTemplate = (timezone, datetime) =>
   `The actual time in ${timezone} is ${datetime}`;
 
-bot.onText(/\/population/, (msg, match) => {
+bot.onText(/\/time/, (msg, match) => {
   const chatId = msg.chat.id;
-  const name = match.input.split(' ')[1];
-
-  request.get({
-      url: 'https://api.api-ninjas.com/v1/city?name=' + name,
-      headers: {
-        'X-Api-Key': `${population_token}`,
-      },
-    },
-    function (error, response, body) {
-      if (error) return console.error('Request failed:', error);
-      else if (response.statusCode != 200)
-        return console.error(
-          'Error:',
-          response.statusCode,
-          body.toString('utf8')
-        );
-      else bot.sendMessage(chatId, `The population is ${body.slice(93, 102)}`);
-    }
-  );
-});
-
-const getTime = (chatId, city) => {
+  const city = match.input.split(' ')[1];
   const endpoint = worldClock(city);
+
+  if (city === undefined) {
+    bot.sendMessage(
+      chatId,
+      `Please provide city name. For example (/time Kyiv)`
+    );
+    return;
+  }
 
   axios.get(endpoint).then(
     (resp) => {
@@ -118,23 +113,19 @@ const getTime = (chatId, city) => {
       );
     }
   );
-};
+});
 
-bot.onText(/\/time/, (msg, match) => {
+bot.onText(/\/weather/, (msg, match) => {
   const chatId = msg.chat.id;
   const city = match.input.split(' ')[1];
 
   if (city === undefined) {
     bot.sendMessage(
       chatId,
-      `Please provide city name. For example (/time Kyiv)`
+      `Please provide city name. For example (/weather Kyiv)`
     );
     return;
   }
-  getTime(chatId, city);
-});
-
-const getWeather = (chatId, city) => {
   const endpoint = weatherEndpoint(city);
 
   axios.get(endpoint).then(
@@ -166,18 +157,27 @@ const getWeather = (chatId, city) => {
       );
     }
   );
-};
+});
 
-bot.onText(/\/weather/, (msg, match) => {
+bot.onText(/\/population/, (msg, match) => {
   const chatId = msg.chat.id;
-  const city = match.input.split(' ')[1];
+  const name = match.input.split(' ')[1];
 
-  if (city === undefined) {
-    bot.sendMessage(
-      chatId,
-      `Please provide city name. For example (/weather Kyiv)`
-    );
-    return;
-  }
-  getWeather(chatId, city);
+  request.get({
+      url: 'https://api.api-ninjas.com/v1/city?name=' + name,
+      headers: {
+        'X-Api-Key': `${population_token}`,
+      },
+    },
+    function (error, response, body) {
+      if (error) return console.error('Request failed:', error);
+      else if (response.statusCode != 200)
+        return console.error(
+          'Error:',
+          response.statusCode,
+          body.toString('utf8')
+        );
+      else bot.sendMessage(chatId, `The population is ${body.slice(93, 102)}`);
+    }
+  );
 });
