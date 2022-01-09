@@ -65,7 +65,7 @@ const basic = () => {
         return bot.sendMessage(chatId, '/weather - Weather in your city\n' +
           '/time - Actual time in your city\n' +
           '/popoulation - Population in your city\n' +
-          '/help - Список команд\n')
+          '/help - Commands list\n')
       }
     } catch (e) {
       console.log('error');
