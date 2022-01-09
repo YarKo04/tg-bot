@@ -46,7 +46,7 @@ const basic = () => {
       if (text === '/start') {
         await bot.sendMessage(
           chatId,
-          'Welcome to Smart-Bot! Hope that we can make your life easier!'
+          'Welcome to City-Bot! Hope that we can make your life easier!'
         );
         return bot.sendSticker(
           chatId,
