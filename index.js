@@ -91,28 +91,27 @@ bot.onText(/\/time/, (msg, match) => {
     );
     return;
   }
+  try {
+    axios.get(endpoint).then(
+      async (resp) => {
+        const {
+          timezone,
+          datetime
+        } = resp.data;
 
-  axios.get(endpoint).then(
-    (resp) => {
-      const {
-        timezone,
-        datetime
-      } = resp.data;
-
-      bot.sendMessage(chatId, clockHTMLTemplate(timezone, datetime), {
-        parse_mode: 'HTML',
-      });
-    },
-    (error) => {
-      console.log('error', error);
-      bot.sendMessage(
-        chatId,
-        `Ooops...I couldn't be able to get time for <b>${city}</b>`, {
+        await bot.sendMessage(chatId, clockHTMLTemplate(timezone, datetime), {
           parse_mode: 'HTML',
-        }
-      );
-    }
-  );
+        });
+      })
+  } catch (e) {
+    console.log('error', error);
+    bot.sendMessage(
+      chatId,
+      `Ooops...I couldn't be able to get time for <b>${city}</b>`, {
+        parse_mode: 'HTML',
+      }
+    );
+  }
 });
 
 bot.onText(/\/weather/, (msg, match) => {
@@ -128,35 +127,36 @@ bot.onText(/\/weather/, (msg, match) => {
   }
   const endpoint = weatherEndpoint(city);
 
-  axios.get(endpoint).then(
-    (resp) => {
-      const {
-        name,
-        main,
-        weather,
-        wind,
-        clouds
-      } = resp.data;
+  try {
+    axios.get(endpoint).then(
+      async (resp) => {
+        const {
+          name,
+          main,
+          weather,
+          wind,
+          clouds
+        } = resp.data;
 
-      bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
+        await bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
 
-      bot.sendMessage(
-        chatId,
-        weatherHtmlTemplate(name, main, weather[0], wind, clouds), {
-          parse_mode: 'HTML',
-        }
-      );
-    },
-    (error) => {
-      console.log('error', error);
-      bot.sendMessage(
-        chatId,
-        `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
-          parse_mode: 'HTML',
-        }
-      );
-    }
-  );
+        return bot.sendMessage(
+          chatId,
+          weatherHtmlTemplate(name, main, weather[0], wind, clouds), {
+            parse_mode: 'HTML',
+          }
+        );
+      }
+    )
+  } catch (e) {
+    console.log('error', error);
+    bot.sendMessage(
+      chatId,
+      `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
+        parse_mode: 'HTML',
+      }
+    );
+  }
 });
 
 bot.onText(/\/population/, (msg, match) => {
