@@ -2,14 +2,14 @@
 
 ## What this bot can do?
 
-## This bot provides information about the city:
+# This bot provides information about the city:
 
-    ![](./1.jpeg)
+    ![](./1.png)
 
-## Shows the weather in the selected city:
+# Shows the weather in the selected city:
 
-    ![](./2.jpeg)
+    ![](./2.png)
 
-## Shows the current date, time and population in the selected city:
+# Shows the current date, time and population in the selected city:
 
-    ![](./3.jpeg)
+    ![](./3.png)
