@@ -4,7 +4,7 @@
 
 # This bot provides information about the city:
 
-    ![](./1.png)
+    ![](https://imgur.com/iuGuVLL)
 
 # Shows the weather in the selected city:
 
