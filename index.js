@@ -23,6 +23,10 @@ const basic = () => {
       description: 'Greeting',
     },
     {
+      command: '/help',
+      description: 'Display a list of possible commands'
+    },
+    {
       command: '/weather',
       description: 'Weather in your city',
     },
@@ -48,10 +52,20 @@ const basic = () => {
           chatId,
           'Welcome to City-Bot! Hope that we can make your life easier!'
         );
-        return bot.sendSticker(
+        await bot.sendSticker(
           chatId,
           'https://tlgrm.ru/_/stickers/88e/586/88e586f0-4299-313f-bedb-ef45c7710422/1.webp'
         );
+        return bot.sendMessage(
+          chatId,
+          'Write "/help" to see available commands'
+        );
+      }
+      if (text === '/help') {
+        return bot.sendMessage(chatId, '/weather - Weather in your city\n' +
+          '/time - Actual time in your city\n' +
+          '/popoulation - Population in your city\n' +
+          '/help - Список команд\n')
       }
     } catch (e) {
       console.log('error');
